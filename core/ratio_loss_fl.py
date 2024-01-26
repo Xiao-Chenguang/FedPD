@@ -40,6 +40,7 @@ def compute_Ra_p(model, data_label):
         f_data = model(data)
         loss = loss_fn(f_data, label)
         grad_c = torch.autograd.grad(loss, model.parameters())
+        ### last layer weight ###
         Delta_W.append(grad_c[-2])
     # compute Ra_p from Delta_W
     Delta_W_sum = torch.sum(torch.stack(Delta_W, dim=0), dim=0)
