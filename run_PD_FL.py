@@ -99,6 +99,7 @@ def main():
                                    )
 
     n_aux = 5
+    ### auxiliary data for ratio loss ###
     auxiliary_data = get_auxiliary_data(args, transforms_test, dataset_train, n_classes,
                                         n_aux) if args.formulation == "ratioloss-fl" else None
 

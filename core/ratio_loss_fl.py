@@ -9,6 +9,7 @@ RLFL_server_state = namedtuple("ImFL_server_state", ['global_round', 'model'])
 class RatioLossFL(PrimalDualFedAlgorithm):
     def __init__(self, fed_algorithm: FedAlgorithm, config, logger, auxiliary_data):
         super(RatioLossFL, self).__init__(fed_algorithm, config, logger, auxiliary_data)
+        ### hyperparameters for ratio loss ###
         self.alpha = 1.
         self.beta = .1
 
@@ -17,9 +18,12 @@ class RatioLossFL(PrimalDualFedAlgorithm):
         return RLFL_server_state(global_round=0, model=model)
 
     def step(self):
+        ### compute Ra_p ###
         Ra_p = compute_Ra_p(self.server_state.model, self.auxiliary_data)
+        ### use weighted loss function ###
         loss_weights = self.alpha + self.beta * Ra_p
         self.primal_fed_algorithm.loss = torch.nn.CrossEntropyLoss(weight=loss_weights)
+        ### train ###
         self.primal_fed_algorithm.fit([1.] * self.config.n_workers, self.config.n_p_steps)
         self.server_state = RLFL_server_state(self.server_state.global_round+1, self.primal_fed_algorithm.server_state.model)
 
