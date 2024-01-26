@@ -18,7 +18,9 @@ class ImbalanceFL(PrimalDualFedAlgorithm):
     ### global pd step
     def step(self):
         sss = self.server_state
+        ### this is the client specificed weights $\lambda_i$
         weights = (1. + sss.lambda_var - torch.mean(sss.lambda_var))
+        ### This may involve extra communication cost
         client_losses = torch.tensor(self.primal_fed_algorithm.clients_evaluate())
         ### clients synchronize step with primal and dual updates
         self.primal_fed_algorithm.fit(weights, self.config.n_p_steps)

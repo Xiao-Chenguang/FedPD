@@ -87,7 +87,10 @@ def main():
     loggers = [logger_accuracy, logger_class_wise_accuracy, logger_monitor]
     # 4. run PD FL
 
+    ### outer FL updates PD parameters
     make_pd_fed_learner = PD_FEDERATED_LEARNERS[args.formulation]
+
+    ### Inner FL use PD FL
     make_fed_learner = FEDERATED_LEARNERS[args.learner]
 
     fed_learner = make_fed_learner(init_model=model,
